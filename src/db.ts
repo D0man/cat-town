@@ -3,6 +3,7 @@ import Dexie, { Table } from 'dexie';
 export interface User {
   id?: number;
   name: string;
+  gender: 'male' | 'female';
   createdAt: Date;
   lastOnline: number;
   savedGame: string;

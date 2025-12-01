@@ -1,10 +1,14 @@
 import { useState, FormEvent } from 'react';
-import { useUserStore } from '../stores/userStore';
+import { useUserStore } from '../../../stores/userStore';
+import { GenderSelector } from './GenderSelector';
+import { useNavigate } from 'react-router-dom';
 
 export function UserRegistration() {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addUser, setCurrentUser } = useUserStore();
+    const [gender, setGender] = useState<'male' | 'female'>('male');
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -15,7 +19,7 @@ export function UserRegistration() {
             alert('Please enter a name');
             return;
         }
-        if (trimmed.length <= 3) {
+        if (trimmed.length < 3) {
             alert('Please use at least 3 letters');
             return;
         }
@@ -24,7 +28,7 @@ export function UserRegistration() {
 
         try {
             // Add user to database
-            const newUser = await addUser(name.trim());
+            const newUser = await addUser(name.trim(), gender);
 
             // Auto-login the new user
             setCurrentUser(newUser);
@@ -38,20 +42,19 @@ export function UserRegistration() {
             alert('Failed to create user');
         } finally {
             setIsSubmitting(false);
+            navigate('/game');
         }
     };
 
     return (
-        <div className="max-w-md mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">Create New User</h2>
-
+        <div className="max-w-5xl mx-auto p-6">
+            <h2 className="text-2xl font-bold mb-4">Create New Game</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
+                <fieldset className="max-w-xl flex items-center">
                     <label
                         htmlFor="name"
-                        className="block text-sm font-medium mb-2"
-                    >
-                        Player Name
+                        className="flex text-xl font-medium px-4}"
+                    >Player Name:
                     </label>
                     <input
                         id="name"
@@ -60,17 +63,17 @@ export function UserRegistration() {
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Enter your name"
                         disabled={isSubmitting}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 ml-5 py-2 border text-xl font-medium  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         maxLength={50}
                     />
-                </div>
-
+                </fieldset>
+                <GenderSelector value={gender} onChange={setGender} />
                 <button
                     type="submit"
                     disabled={isSubmitting || !name.trim()}
                     className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
-                    {isSubmitting ? 'Creating...' : 'Create User'}
+                    {isSubmitting ? 'Starting...' : 'Start Game'}
                 </button>
             </form>
         </div>

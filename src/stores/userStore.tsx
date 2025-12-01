@@ -7,7 +7,7 @@ interface UserStore {
     isLoading: boolean;
 
     // Actions
-    addUser: (name: string) => Promise<User>;
+    addUser: (name: string, gender: 'male' | 'female') => Promise<User>;
     updateLastOnline: (id: number) => Promise<void>;
     updateSavedGame: (id: number, savedGame: string) => Promise<void>;
     deleteUser: (id: number) => Promise<void>;
@@ -40,10 +40,11 @@ export const useUserStore = create<UserStore>((set, get) => ({
         set({ currentUser: null });
     },
 
-    addUser: async (name: string) => {
+    addUser: async (name: string, gender: 'male' | 'female') => {
         try {
             const newUser: User = {
                 name,
+                gender,
                 createdAt: new Date(),
                 lastOnline: Date.now(),
                 savedGame: '' // Empty saved game initially

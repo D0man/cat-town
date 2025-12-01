@@ -2,8 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { MenuLayout } from '../../layouts/MenuLayout';
 import { MenuButton } from '../../components/MenuButton';
 import logo from "../../assets/logo.png";
+import { useUserStore } from '../../stores/userStore'
+import { useEffect } from 'react';
 
 export function MainMenuContent() {
+    const { users, loadUsers } = useUserStore();
+
     const navigate = useNavigate();
     const handleCloseGame = async () => {
         try {
@@ -23,9 +27,14 @@ export function MainMenuContent() {
             console.error('Failed to exit:', error);
         }
     };
+
+    useEffect(() => {
+        loadUsers();
+        console.log(users)
+    }, [loadUsers]);
     return (
         <nav className="flex flex-col bg-blue-200 text-white pt-4 pb-10 w-lg m-auto h-full  justify-between">
-            <MenuButton onClick={() => navigate('/game')}>Contiue</MenuButton>
+            {users.length > 0 && <MenuButton onClick={() => navigate('/game')}>Contiue</MenuButton>}
             <MenuButton onClick={() => navigate('/menu/new')}>New Game</MenuButton>
             <MenuButton onClick={() => navigate('/menu/settings')}>Setting </MenuButton>
             <MenuButton onClick={handleCloseGame}>Exit</MenuButton>

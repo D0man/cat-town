@@ -1,5 +1,9 @@
+import { MenuBackButton } from "@components/MenuBackButton"
 export function Settings() {
     return (
-        <div>Settings</div>
+        <div>
+            <MenuBackButton />
+            <div>Settings</div>
+        </div>
     )
 }

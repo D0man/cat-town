@@ -31,4 +31,4 @@ export function MenuLayout({ children, imageSrc }: MenuLayoutProps) {
       </div>
     </div>
   );
-}
+};
