@@ -1,0 +1,1 @@
+// stores/inventoryStore.ts

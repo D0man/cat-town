@@ -1,3 +1,4 @@
+//UserRegistration.tsx
 import { useState, FormEvent } from 'react';
 import { useUserStore } from '../../../stores/userStore';
 import { GenderSelector } from './GenderSelector';
@@ -37,18 +38,17 @@ export function UserRegistration() {
             setName('');
 
             console.log('User created:', newUser);
+            navigate('/game');
         } catch (error) {
             console.error('Error creating user:', error);
             alert('Failed to create user');
         } finally {
             setIsSubmitting(false);
-            navigate('/game');
         }
     };
 
     return (
         <div className="max-w-5xl mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">Create New Game</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <fieldset className="max-w-xl flex items-center">
                     <label

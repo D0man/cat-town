@@ -1,3 +1,4 @@
+//MainMenu.tsx
 import { useNavigate } from 'react-router-dom';
 import { MenuLayout } from '../../layouts/MenuLayout';
 import { MenuButton } from '../../components/MenuButton';
@@ -6,7 +7,7 @@ import { useUserStore } from '../../stores/userStore'
 import { useEffect } from 'react';
 
 export function MainMenuContent() {
-    const { users, loadUsers } = useUserStore();
+    const { users, loadUsers, setCurrentUser } = useUserStore();
 
     const navigate = useNavigate();
     const handleCloseGame = async () => {
@@ -27,6 +28,13 @@ export function MainMenuContent() {
             console.error('Failed to exit:', error);
         }
     };
+    const handleContinue = () => {
+        const mostRecent = users.sort((a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )[0];
+        setCurrentUser(mostRecent);
+        navigate('/game');
+    };
 
     useEffect(() => {
         loadUsers();
@@ -34,7 +42,7 @@ export function MainMenuContent() {
     }, [loadUsers]);
     return (
         <nav className="flex flex-col bg-blue-200 text-white pt-4 pb-10 w-lg m-auto h-full  justify-between">
-            {users.length > 0 && <MenuButton onClick={() => navigate('/game')}>Contiue</MenuButton>}
+            {users.length > 0 && <MenuButton onClick={handleContinue}>Contiue</MenuButton>}
             <MenuButton onClick={() => navigate('/menu/new')}>New Game</MenuButton>
             <MenuButton onClick={() => navigate('/menu/settings')}>Setting </MenuButton>
             <MenuButton onClick={handleCloseGame}>Exit</MenuButton>

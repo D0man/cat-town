@@ -1,3 +1,4 @@
+//GameLayouts.tsx
 import { Outlet, useNavigate } from 'react-router-dom';
 
 export function GameLayout() {
@@ -21,11 +22,6 @@ export function GameLayout() {
             <main className="flex-1 overflow-auto p-4">
                 <Outlet />
             </main>
-
-            {/* Game footer - always visible */}
-            <footer className="bg-gray-800 text-white p-2 text-center">
-                HP: 100 | Level: 5 | Gold: 250
-            </footer>
         </div>
     );
 }

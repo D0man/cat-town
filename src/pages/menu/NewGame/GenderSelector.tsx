@@ -1,3 +1,4 @@
+//GenderSelector.tsx
 import { ImageRadioSelector, type Option } from "@components/ImageRadioSelector";
 import FemaleImg from '@assets/femaleselect.png';
 import MaleImg from '@assets/maleselect.png';
