@@ -1,5 +1,6 @@
+//index.tsx
 import { UserRegistration } from './UserRegistration';
-import { MenuLayout } from '../../../layouts/MenuLayout';
+import { MenuLayout } from '@layouts/MenuLayout';
 import logo from '@assets/logo.png';
 import { BackButton } from './BackButton';
 

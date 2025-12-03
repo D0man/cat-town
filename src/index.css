@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+@font-face {
+    font-family: 'Pixelify Sans';
+    src: url('/src/assets/fonts/PixelifySans.woff2') format('woff2');
+    font-weight: 400 700;
+    /* Supports all weights from 400 to 700 */
+    font-style: normal;
+    font-display: block;
+}
+
+@theme {
+    --font-sans: 'Pixelify Sans', system-ui, sans-serif;
+}

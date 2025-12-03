@@ -19,7 +19,8 @@ export default defineConfig(async () => ({
       "@assets": path.resolve(__dirname, "src/assets"),
       "@stores": path.resolve(__dirname, "src/stores"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
-      "@layouts": path.resolve(__dirname, "src/layouts")
+      "@layouts": path.resolve(__dirname, "src/layouts"),
+      "@pages": path.resolve(__dirname, "src/pages")
     }
   },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`

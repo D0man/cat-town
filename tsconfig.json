@@ -40,6 +40,9 @@
       ],
       "@layouts/*": [
         "src/layouts/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
       ]
     }
   },

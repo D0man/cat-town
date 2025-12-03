@@ -6,6 +6,7 @@ interface UserStore {
     users: User[];
     currentUser: null | User;
     isLoading: boolean;
+    lastOnline: number;
 
     // Actions
     addUser: (name: string, gender: 'male' | 'female') => Promise<User>;
@@ -21,6 +22,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     users: [],
     currentUser: null,
     isLoading: false,
+    lastOnline: 0,
     setCurrentUser: (user: User | null) => {
         if (user && user.id) {
             get().updateLastOnline(user.id);
@@ -31,8 +33,19 @@ export const useUserStore = create<UserStore>((set, get) => ({
         set({ isLoading: true });
         try {
             const users = await db.users.toArray();
+            if (users.length > 0) {
+                const usersWithId = users.filter(user => user.id !== undefined);
+
+                const highestLastOnlineUser = usersWithId.reduce<User | null>(
+                    (max, user) => !max || user.lastOnline > max.lastOnline ? user : max,
+                    null
+                );
+
+                set({ currentUser: highestLastOnlineUser });
+            }
             set({ users, isLoading: false });
         } catch (error) {
+            console.log(error)
             console.error('Failed to load users:', error);
             set({ isLoading: false });
         }

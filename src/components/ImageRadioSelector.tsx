@@ -1,4 +1,4 @@
-// ImageRadioSelector.tsx - Generic component
+// ImageRadioSelector.tsx 
 
 type Color = "pink" | "blue" | "gray";
 type Shade = 50 | 100 | 200 | 300 | 400 | 500;

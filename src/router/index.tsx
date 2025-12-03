@@ -1,7 +1,9 @@
+//index.tsx
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MenuRouter } from './MenuRouter';
 import { GameRouter } from './GameRouter';
-
+import { NotFound } from '@pages/Notfound';
+import { ProtectedRoute } from '@components/ProtectedRoute'
 export function AppRouter() {
     return (
         <HashRouter>
@@ -13,7 +15,13 @@ export function AppRouter() {
                 <Route path="/menu/*" element={<MenuRouter />} />
 
                 {/* Game routes - all game-related pages */}
-                <Route path="/game/*" element={<GameRouter />} />
+                <Route
+                    element={<ProtectedRoute />}
+                >
+                    <Route path="/game/*" element={<GameRouter />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+
             </Routes>
         </HashRouter>
     );

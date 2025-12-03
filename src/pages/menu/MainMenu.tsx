@@ -1,13 +1,12 @@
 //MainMenu.tsx
 import { useNavigate } from 'react-router-dom';
-import { MenuLayout } from '../../layouts/MenuLayout';
-import { MenuButton } from '../../components/MenuButton';
-import logo from "../../assets/logo.png";
-import { useUserStore } from '../../stores/userStore'
-import { useEffect } from 'react';
+import { MenuLayout } from '@layouts/MenuLayout';
+import { MenuButton } from '@components/MenuButton';
+import logo from "@assets/logo.png";
+import { useUserStore } from '@stores/userStore'
 
 export function MainMenuContent() {
-    const { users, loadUsers, setCurrentUser } = useUserStore();
+    const { users, setCurrentUser } = useUserStore();
 
     const navigate = useNavigate();
     const handleCloseGame = async () => {
@@ -36,10 +35,6 @@ export function MainMenuContent() {
         navigate('/game');
     };
 
-    useEffect(() => {
-        loadUsers();
-        console.log(users)
-    }, [loadUsers]);
     return (
         <nav className="flex flex-col bg-blue-200 text-white pt-4 pb-10 w-lg m-auto h-full  justify-between">
             {users.length > 0 && <MenuButton onClick={handleContinue}>Contiue</MenuButton>}

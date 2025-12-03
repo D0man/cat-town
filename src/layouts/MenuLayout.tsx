@@ -1,3 +1,4 @@
+//menuLayout.tsx
 interface MenuLayoutProps {
   children?: React.ReactNode;
   imageSrc: string;
@@ -5,7 +6,7 @@ interface MenuLayoutProps {
 
 export function MenuLayout({ children, imageSrc }: MenuLayoutProps) {
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden font-sans h-screen">
+    <div className="flex flex-col h-full w-full overflow-hidden font-sans h-screen font-normal">
       {/* Space One: 20% - Image in center with text */}
       <div className="basis-[20%] shrink-0 relative flex items-center justify-center bg-blue-200 overflow-hidden">
         <img
