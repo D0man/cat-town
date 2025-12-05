@@ -4,7 +4,7 @@ import ThreeStateButton from '@components/ThreeStateButton';
 
 interface GatheringCardProps {
     gatheringSkill: string;    // e.g., "Woodcutting"
-    gatheringItem: string;     // e.g., "Oak"
+    gatheringName: string | null;     // e.g., "Oak"
     isAuto?: boolean;           // Auto-gather enabled? (not used yet, for future)
     duration: number;          // Duration in milliseconds
     onGather: () => void;      // Callback when gather button is clicked
@@ -12,7 +12,7 @@ interface GatheringCardProps {
 
 export function GatheringInfoCard({
     gatheringSkill,
-    gatheringItem,
+    gatheringName,
     isAuto,
     duration,
     onGather,
@@ -66,7 +66,7 @@ export function GatheringInfoCard({
                 <span className="text-2xl">🪓</span> {/* Replace with dynamic icon */}
                 <div>
                     <h3 className="font-bold text-lg">{gatheringSkill}</h3>
-                    <p className="text-sm text-gray-600">{gatheringItem}</p>
+                    <p className="text-sm text-gray-600">{gatheringName}</p>
                 </div>
             </div>
 

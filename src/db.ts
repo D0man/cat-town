@@ -15,6 +15,9 @@ export interface Skill {
   skillName: string;
   level: number;
   exp: number;
+  active?: boolean,
+  startTime?: number | null
+  actionName?: string
 }
 
 export interface InventoryItem {
@@ -31,7 +34,7 @@ export class GameDatabase extends Dexie {
 
   constructor() {
     super('GameDB');
-    this.version(3).stores({
+    this.version(5).stores({
       users: '++id, name, lastOnline',
       skills: '[userId+skillName], userId',
       inventory: '[userId+itemId], userId',

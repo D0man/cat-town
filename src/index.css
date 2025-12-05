@@ -12,3 +12,379 @@
 @theme {
     --font-sans: 'Pixelify Sans', system-ui, sans-serif;
 }
+
+@layer utilities {
+    .pixeled {
+        position: relative;
+        border: 0.25rem solid transparent;
+        clip-path: polygon(0.25rem 0.5rem,
+                0.5rem 0.5rem,
+                0.5rem 0.25rem,
+                calc(100% - 0.5rem) 0.25rem,
+                calc(100% - 0.5rem) 0.5rem,
+                calc(100% - 0.25rem) 0.5rem,
+                calc(100% - 0.25rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.5rem),
+                0.25rem calc(100% - 0.5rem));
+    }
+
+    .pixeled-border {
+        width: fit-content;
+        height: fit-content;
+        position: relative;
+        clip-path: polygon(0.25rem 0.5rem,
+                0.5rem 0.5rem,
+                0.5rem 0.25rem,
+                calc(100% - 0.5rem) 0.25rem,
+                calc(100% - 0.5rem) 0.5rem,
+                calc(100% - 0.25rem) 0.5rem,
+                calc(100% - 0.25rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.5rem),
+                0.25rem calc(100% - 0.5rem));
+    }
+
+    .pixeled::after,
+    .pixeled-border::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--pixeled-bg-color, #000);
+        ;
+        pointer-events: none;
+        clip-path: polygon(0 calc(100% - 0.5rem),
+                0.25rem calc(100% - 0.5rem),
+                0.25rem calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.25rem),
+                0.5rem 100%,
+                calc(100% - 0.5rem) 100%,
+                calc(100% - 0.5rem) calc(100% - 0.25rem),
+                calc(100% - 0.25rem) calc(100% - 0.25rem),
+                calc(100% - 0.25rem) calc(100% - 0.5rem),
+                100% calc(100% - 0.5rem),
+                100% 0.5rem,
+                calc(100% - 0.25rem) 0.5rem,
+                calc(100% - 0.25rem) 0.25rem,
+                calc(100% - 0.5rem) 0.25rem,
+                calc(100% - 0.5rem) 0,
+                0.5rem 0,
+                0.5rem 0.25rem,
+                0.25rem 0.25rem,
+                0.25rem 0.5rem,
+                0 0.5rem,
+                0 50%,
+                0.25rem 50%,
+                0.25rem 0.5rem,
+                0.5rem 0.5rem,
+                0.5rem 0.25rem,
+                calc(100% - 0.5rem) 0.25rem,
+                calc(100% - 0.5rem) 0.5rem,
+                calc(100% - 0.25rem) 0.5rem,
+                calc(100% - 0.25rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.5rem),
+                calc(100% - 0.5rem) calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.25rem),
+                0.5rem calc(100% - 0.5rem),
+                0.25rem calc(100% - 0.5rem),
+                0.25rem 50%,
+                0 50%);
+    }
+
+    .pixel::after {
+        margin: -4px;
+    }
+
+    .pixeled-red-50 {
+        --pixeled-bg-color: #fef2f2;
+    }
+
+    .pixeled-red-100 {
+        --pixeled-bg-color: #fee2e2;
+    }
+
+    .pixeled-red-200 {
+        --pixeled-bg-color: #fecaca;
+    }
+
+    .pixeled-red-300 {
+        --pixeled-bg-color: #fca5a5;
+    }
+
+    .pixeled-red-400 {
+        --pixeled-bg-color: #f87171;
+    }
+
+    .pixeled-red-500 {
+        --pixeled-bg-color: #ef4444;
+    }
+
+    .pixeled-red-600 {
+        --pixeled-bg-color: #dc2626;
+    }
+
+    .pixeled-red-700 {
+        --pixeled-bg-color: #b91c1c;
+    }
+
+    .pixeled-red-800 {
+        --pixeled-bg-color: #991b1b;
+    }
+
+    .pixeled-red-900 {
+        --pixeled-bg-color: #7f1d1d;
+    }
+
+    /* Blue shades */
+    .pixeled-blue-50 {
+        --pixeled-bg-color: #eff6ff;
+    }
+
+    .pixeled-blue-100 {
+        --pixeled-bg-color: #dbeafe;
+    }
+
+    .pixeled-blue-200 {
+        --pixeled-bg-color: #bfdbfe;
+    }
+
+    .pixeled-blue-300 {
+        --pixeled-bg-color: #93c5fd;
+    }
+
+    .pixeled-blue-400 {
+        --pixeled-bg-color: #60a5fa;
+    }
+
+    .pixeled-blue-500 {
+        --pixeled-bg-color: #3b82f6;
+    }
+
+    .pixeled-blue-600 {
+        --pixeled-bg-color: #2563eb;
+    }
+
+    .pixeled-blue-700 {
+        --pixeled-bg-color: #1d4ed8;
+    }
+
+    .pixeled-blue-800 {
+        --pixeled-bg-color: #1e40af;
+    }
+
+    .pixeled-blue-900 {
+        --pixeled-bg-color: #1e3a8a;
+    }
+
+    /* Green shades */
+    .pixeled-green-50 {
+        --pixeled-bg-color: #f0fdf4;
+    }
+
+    .pixeled-green-100 {
+        --pixeled-bg-color: #dcfce7;
+    }
+
+    .pixeled-green-200 {
+        --pixeled-bg-color: #bbf7d0;
+    }
+
+    .pixeled-green-300 {
+        --pixeled-bg-color: #86efac;
+    }
+
+    .pixeled-green-400 {
+        --pixeled-bg-color: #4ade80;
+    }
+
+    .pixeled-green-500 {
+        --pixeled-bg-color: #22c55e;
+    }
+
+    .pixeled-green-600 {
+        --pixeled-bg-color: #16a34a;
+    }
+
+    .pixeled-green-700 {
+        --pixeled-bg-color: #15803d;
+    }
+
+    .pixeled-green-800 {
+        --pixeled-bg-color: #166534;
+    }
+
+    .pixeled-green-900 {
+        --pixeled-bg-color: #14532d;
+    }
+
+    /* Yellow shades */
+    .pixeled-yellow-50 {
+        --pixeled-bg-color: #fefce8;
+    }
+
+    .pixeled-yellow-100 {
+        --pixeled-bg-color: #fef9c3;
+    }
+
+    .pixeled-yellow-200 {
+        --pixeled-bg-color: #fef08a;
+    }
+
+    .pixeled-yellow-300 {
+        --pixeled-bg-color: #fde047;
+    }
+
+    .pixeled-yellow-400 {
+        --pixeled-bg-color: #facc15;
+    }
+
+    .pixeled-yellow-500 {
+        --pixeled-bg-color: #eab308;
+    }
+
+    .pixeled-yellow-600 {
+        --pixeled-bg-color: #ca8a04;
+    }
+
+    .pixeled-yellow-700 {
+        --pixeled-bg-color: #a16207;
+    }
+
+    .pixeled-yellow-800 {
+        --pixeled-bg-color: #854d0e;
+    }
+
+    .pixeled-yellow-900 {
+        --pixeled-bg-color: #713f12;
+    }
+
+    /* Purple shades */
+    .pixeled-purple-50 {
+        --pixeled-bg-color: #faf5ff;
+    }
+
+    .pixeled-purple-100 {
+        --pixeled-bg-color: #f3e8ff;
+    }
+
+    .pixeled-purple-200 {
+        --pixeled-bg-color: #e9d5ff;
+    }
+
+    .pixeled-purple-300 {
+        --pixeled-bg-color: #d8b4fe;
+    }
+
+    .pixeled-purple-400 {
+        --pixeled-bg-color: #c084fc;
+    }
+
+    .pixeled-purple-500 {
+        --pixeled-bg-color: #a855f7;
+    }
+
+    .pixeled-purple-600 {
+        --pixeled-bg-color: #9333ea;
+    }
+
+    .pixeled-purple-700 {
+        --pixeled-bg-color: #7e22ce;
+    }
+
+    .pixeled-purple-800 {
+        --pixeled-bg-color: #6b21a8;
+    }
+
+    .pixeled-purple-900 {
+        --pixeled-bg-color: #581c87;
+    }
+
+    /* Pink shades */
+    .pixeled-pink-50 {
+        --pixeled-bg-color: #fdf2f8;
+    }
+
+    .pixeled-pink-100 {
+        --pixeled-bg-color: #fce7f3;
+    }
+
+    .pixeled-pink-200 {
+        --pixeled-bg-color: #fbcfe8;
+    }
+
+    .pixeled-pink-300 {
+        --pixeled-bg-color: #f9a8d4;
+    }
+
+    .pixeled-pink-400 {
+        --pixeled-bg-color: #f472b6;
+    }
+
+    .pixeled-pink-500 {
+        --pixeled-bg-color: #ec4899;
+    }
+
+    .pixeled-pink-600 {
+        --pixeled-bg-color: #db2777;
+    }
+
+    .pixeled-pink-700 {
+        --pixeled-bg-color: #be185d;
+    }
+
+    .pixeled-pink-800 {
+        --pixeled-bg-color: #9d174d;
+    }
+
+    .pixeled-pink-900 {
+        --pixeled-bg-color: #831843;
+    }
+
+    /* Gray shades */
+    .pixeled-gray-50 {
+        --pixeled-bg-color: #f9fafb;
+    }
+
+    .pixeled-gray-100 {
+        --pixeled-bg-color: #f3f4f6;
+    }
+
+    .pixeled-gray-200 {
+        --pixeled-bg-color: #e5e7eb;
+    }
+
+    .pixeled-gray-300 {
+        --pixeled-bg-color: #d1d5db;
+    }
+
+    .pixeled-gray-400 {
+        --pixeled-bg-color: #9ca3af;
+    }
+
+    .pixeled-gray-500 {
+        --pixeled-bg-color: #6b7280;
+    }
+
+    .pixeled-gray-600 {
+        --pixeled-bg-color: #4b5563;
+    }
+
+    .pixeled-gray-700 {
+        --pixeled-bg-color: #374151;
+    }
+
+    .pixeled-gray-800 {
+        --pixeled-bg-color: #1f2937;
+    }
+
+    .pixeled-gray-900 {
+        --pixeled-bg-color: #111827;
+    }
+}

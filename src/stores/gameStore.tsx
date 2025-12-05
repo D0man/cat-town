@@ -9,13 +9,18 @@ type SkillState = {
     [K in SkillCode as `${K}Exp`]: number;
 };
 
+interface SkillVariable {
+    lastAction: null | string;
+    actionName: null | string;
+}
 interface SkillActions {
     loadSkill: (userId: number, skillCode: SkillCode) => Promise<void>;
     updateExp: (userId: number, skillCode: SkillCode, expGain: number) => Promise<void>;
     loadAllSkills: (userId: number) => Promise<void>;
+    updateAction: (userId: number, skillName: string, actionName: string) => Promise<void>;
 }
 
-type SkillStore = SkillState & SkillActions;
+type SkillStore = SkillState & SkillActions & SkillVariable;
 
 const createInitialState = (): SkillState => {
     const state = {} as SkillState;
@@ -30,6 +35,8 @@ const createInitialState = (): SkillState => {
 
 export const useGameStore = create<SkillStore>((set, get) => ({
     ...createInitialState(),
+    lastAction: null,
+    actionName: null,
 
     loadSkill: async (userId: number, skillCode: SkillCode) => {
         const skillName = skillMap.get(skillCode);
@@ -41,16 +48,20 @@ export const useGameStore = create<SkillStore>((set, get) => ({
         }).first();
 
         if (skill) {
+            console.log(skill, 'skillStore')
             set({
                 [`${skillCode}Level`]: skill.level,
                 [`${skillCode}Exp`]: skill.exp,
             } as Partial<SkillState>);
+            set({ actionName: skill?.actionName })
         } else {
             set({
                 [`${skillCode}Level`]: 1,
                 [`${skillCode}Exp`]: 0,
             } as Partial<SkillState>);
+            set({ actionName: null })
         }
+
     },
 
     loadAllSkills: async (userId: number) => {
@@ -85,5 +96,16 @@ export const useGameStore = create<SkillStore>((set, get) => ({
             level,
             exp: newExp,
         });
+    },
+    updateAction: async (userId: number, skillName, actionName) => {
+        const currentActive = await db.skills
+            .where('userId')
+            .equals(userId)
+            .and(skill => skill.active === true)
+            .modify({ active: false, startTime: null });
+        console.log(currentActive)
+        const timeNow = Date.now()
+        set({ actionName: actionName })
+        await db.skills.update([userId, skillName.toLowerCase()], { active: true, actionName: actionName, startTime: timeNow });
     },
 }));
