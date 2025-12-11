@@ -16,26 +16,26 @@ export const LevelCard: React.FC<LevelCardProps> = ({
 }) => {
     const progressPercentage = getXpProgress(currentProgress, levelNumber);
     const nextLevelExp = getXpForNextLevel(levelNumber)
-    console.log(progressPercentage, currentProgress)
+    const test = false ? progressPercentage + nextLevelExp : null
 
     return (
         <div className="level-card">
             {imageUrl ? <img src={imageUrl} alt={`Level ${levelNumber}`} className="level-image" /> : skillName}
-
+            {test}
             <div className="level-info">
                 <h3>Level {levelNumber}</h3>
 
                 <div className="mb-3">
-                    <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                    {/* <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
                         <div
                             className="bg-blue-500 h-4 transition-all duration-100"
                             style={{ width: `${progressPercentage * 100}%` }}
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 <p className="progress-text">
-                    {currentProgress} / {nextLevelExp}
+                    {currentProgress} {/* {currentProgress} / {nextLevelExp} */}
                 </p>
             </div>
         </div>

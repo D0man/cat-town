@@ -21,15 +21,15 @@ import willowImg from '@assets/skills/trees/willow.png';
  */
 export const XP_TABLE = [
   0,       // Level 1
-  100,     // Level 2
-  250,     // Level 3
-  500,     // Level 4
-  1000,    // Level 5
-  1750,    // Level 6
-  2800,    // Level 7
-  4200,    // Level 8
-  6000,    // Level 9
-  8300,    // Level 10
+  100000000,     // Level 2
+  250000000,     // Level 3
+  500000000,     // Level 4
+  100000000,    // Level 5
+  175000000,    // Level 6
+  280000000,    // Level 7
+  420000000,    // Level 8
+  600000000,    // Level 9
+  830000000,    // Level 10
 ];
 export interface GatherType {
   name: string;
@@ -48,7 +48,7 @@ export const WOOD_TYPES: GatherConfig = {
   ash: {
     name: 'Ash',
     image: ashImg,
-    duration: 5000,
+    duration: 8000,
     xpPerAction: 10,
     requiredLevel: 1,
   },

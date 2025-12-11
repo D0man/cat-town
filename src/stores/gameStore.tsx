@@ -12,16 +12,17 @@ type SkillState = {
 interface SkillVariable {
     lastAction: null | string;
     actionName: null | string;
+    inventory: {}
 }
 interface SkillActions {
     loadSkill: (userId: number, skillCode: SkillCode) => Promise<void>;
     updateExp: (userId: number, skillCode: SkillCode, expGain: number) => Promise<void>;
     loadAllSkills: (userId: number) => Promise<void>;
     updateAction: (userId: number, skillName: string, actionName: string) => Promise<void>;
+    addItem: (userId: number, ItemId: string) => Promise<void>;
 }
 
 type SkillStore = SkillState & SkillActions & SkillVariable;
-
 const createInitialState = (): SkillState => {
     const state = {} as SkillState;
 
@@ -37,6 +38,30 @@ export const useGameStore = create<SkillStore>((set, get) => ({
     ...createInitialState(),
     lastAction: null,
     actionName: null,
+    inventory: {},
+
+    addItem: async (userId, itemName: string) => {
+        set((state) => {
+            if (state.inventory.hasOwnProperty(itemName)) {
+                return { inventory: { ...state.inventory, [itemName]: 1 } }
+            } else {
+
+                return {
+                    inventory: {
+                        ...state.inventory,
+                        // @ts-ignore
+                        [itemName]: state.inventory[itemName] + 1,
+                    },
+                };
+            }
+        })
+        const item = await db.inventory.get(itemName);
+        await db.inventory.put({
+            userId,
+            itemId: itemName,
+            quantity: (item?.quantity || 0) + 1,
+        });
+    },
 
     loadSkill: async (userId: number, skillCode: SkillCode) => {
         const skillName = skillMap.get(skillCode);
@@ -48,7 +73,7 @@ export const useGameStore = create<SkillStore>((set, get) => ({
         }).first();
 
         if (skill) {
-            console.log(skill, 'skillStore')
+
             set({
                 [`${skillCode}Level`]: skill.level,
                 [`${skillCode}Exp`]: skill.exp,
@@ -98,12 +123,11 @@ export const useGameStore = create<SkillStore>((set, get) => ({
         });
     },
     updateAction: async (userId: number, skillName, actionName) => {
-        const currentActive = await db.skills
+        await db.skills
             .where('userId')
             .equals(userId)
             .and(skill => skill.active === true)
             .modify({ active: false, startTime: null });
-        console.log(currentActive)
         const timeNow = Date.now()
         set({ actionName: actionName })
         await db.skills.update([userId, skillName.toLowerCase()], { active: true, actionName: actionName, startTime: timeNow });

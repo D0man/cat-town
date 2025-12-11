@@ -13,7 +13,6 @@ interface GatheringCardProps {
 export function GatheringInfoCard({
     gatheringSkill,
     gatheringName,
-    isAuto,
     duration,
     onGather,
 }: GatheringCardProps) {
@@ -25,7 +24,6 @@ export function GatheringInfoCard({
     const progress = Math.min((elapsed / duration) * 100, 100);
     const timeLeft = Math.max(duration - elapsed, 0);
     const isComplete = progress >= 100;
-    console.log(isAuto)// viarble added for later to use
     const startGathering = useCallback(() => {
         const now = Date.now();
         setIsGathering(true);
