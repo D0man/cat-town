@@ -1,6 +1,6 @@
 //GameLayouts.tsx
 import { Outlet, useNavigate } from 'react-router-dom';
-
+import { MainGameWrapper } from '@components/MainGameWrapper';
 export function GameLayout() {
     const navigate = useNavigate();
 
@@ -20,7 +20,9 @@ export function GameLayout() {
 
             {/* Dynamic content area - changes based on route */}
             <main className="flex-1 overflow-auto p-4">
-                <Outlet />
+                <MainGameWrapper>
+                    <Outlet />
+                </MainGameWrapper>
             </main>
         </div>
     );

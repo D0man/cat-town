@@ -11,11 +11,13 @@ interface UserStore {
     // Actions
     addUser: (name: string, gender: 'male' | 'female') => Promise<User>;
     updateLastOnline: (id: number) => Promise<void>;
+    changeToZeroLastOnline: (id: number) => Promise<void>
     updateSavedGame: (id: number, savedGame: string) => Promise<void>;
     deleteUser: (id: number) => Promise<void>;
     setCurrentUser: (user: User | null) => void;
     logout: () => void;
     loadUsers: () => Promise<void>;
+    loadLastOnline: (id: number) => Promise<void>
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -80,6 +82,34 @@ export const useUserStore = create<UserStore>((set, get) => ({
     updateLastOnline: async (id: number) => {
         try {
             const timestamp = Date.now();
+            await db.users.update(id, { lastOnline: timestamp });
+
+            set(state => ({
+                users: state.users.map(user =>
+                    user.id === id ? { ...user, lastOnline: timestamp } : user
+                ),
+                currentUser: state.currentUser?.id === id
+                    ? { ...state.currentUser, lastOnline: timestamp }
+                    : state.currentUser
+            }));
+        } catch (error) {
+            console.error('Failed to update last online:', error);
+            throw error;
+        }
+    },
+    loadLastOnline: async (id: number) => {
+        const user = await db.users
+            .where('id')
+            .equals(id)
+            .first();
+
+        const lastOnline = user?.lastOnline;
+        set({ lastOnline: lastOnline })
+
+    },
+    changeToZeroLastOnline: async (id: number) => {
+        try {
+            const timestamp = 0;
             await db.users.update(id, { lastOnline: timestamp });
 
             set(state => ({

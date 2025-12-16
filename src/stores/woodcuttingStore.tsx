@@ -16,7 +16,6 @@ export const useWoodcutingStore = create<WoodcuttingStore>((set, get) => ({
 
     loadSkill: async (userId: number) => {
         const skill = await db.skills.where({ userId, skillName: 'woodcutting' }).first();
-        console.log("skill", skill)
         if (skill) {
             set({ woodcuttingLevel: skill.level, woodcuttingExp: skill.exp });
         } else {

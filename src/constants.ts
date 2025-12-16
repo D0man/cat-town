@@ -14,23 +14,32 @@ import teakImg from '@assets/skills/trees/teak.png';
 import voidWhiskerImg from '@assets/skills/trees/voidWhisker.png';
 import willowImg from '@assets/skills/trees/willow.png';
 
-/**
- * XP table for levels 1-99
- * Each index represents the total XP needed to reach that level
- * Adjust this curve to make leveling faster/slower
- */
-export const XP_TABLE = [
-  0,       // Level 1
-  100000000,     // Level 2
-  250000000,     // Level 3
-  500000000,     // Level 4
-  100000000,    // Level 5
-  175000000,    // Level 6
-  280000000,    // Level 7
-  420000000,    // Level 8
-  600000000,    // Level 9
-  830000000,    // Level 10
-];
+export function xpForLevel(level: number): number {
+  if (level <= 30) {
+    return 40 * level + 15 * Math.pow(level - 1, 1.3);
+  } else if (level <= 100) {
+    return 50 * level + 25 * Math.pow(level - 1, 1.5);
+  } else {
+    return 70 * level + 40 * Math.pow(level - 1, 1.7);
+  }
+}
+function getTotalXpTable(maxLevel = 200) {
+  const totalXp = [];
+  let sum = 0;
+
+  // level 1 requires 0 total XP
+  totalXp.push(0);
+
+  for (let level = 1; level < maxLevel; level++) {
+    const xpNeeded = xpForLevel(level);
+    sum += Math.round(xpNeeded);
+    totalXp.push(sum);
+  }
+
+  return totalXp;
+}
+export const XP_TABLE = getTotalXpTable()
+
 export interface GatherType {
   name: string;
   image: string;
@@ -45,119 +54,122 @@ export type GatherConfig = Record<string, GatherType>;
  * Woodcutting resources configuration
  */
 export const WOOD_TYPES: GatherConfig = {
-  ash: {
-    name: 'Ash',
-    image: ashImg,
-    duration: 8000,
+  pine: {
+    name: 'Pine',
+    image: pineImg,
+    duration: 3000,
     xpPerAction: 10,
     requiredLevel: 1,
+  },
+  oak: {
+    name: 'Oak',
+    image: oakImg,
+    duration: 6000,
+    xpPerAction: 15,
+    requiredLevel: 5,
   },
   birch: {
     name: 'Birch',
     image: birchImg,
-    duration: 10000,
-    xpPerAction: 15,
-    requiredLevel: 5,
-  },
-  ebony: {
-    name: 'Ebony',
-    image: ebonyImg,
-    duration: 30000,
-    xpPerAction: 20,
+    duration: 7000,
+    xpPerAction: 22,
     requiredLevel: 10,
+  },
+  ash: {
+    name: 'Ash',
+    image: ashImg,
+    duration: 7500,
+    xpPerAction: 31,
+    requiredLevel: 15,
   },
   elm: {
     name: 'Elm',
     image: elmImg,
-    duration: 35000,
-    xpPerAction: 25,
-    requiredLevel: 15,
-  },
-  mahogany: {
-    name: 'Mahogany',
-    image: mahoganyImg,
-    duration: 40000,
-    xpPerAction: 30,
+    duration: 8000,
+    xpPerAction: 42,
     requiredLevel: 20,
   },
   maple: {
     name: 'Maple',
     image: mapleImg,
-    duration: 45000,
-    xpPerAction: 35,
+    duration: 8500,
+    xpPerAction: 55,
     requiredLevel: 25,
-  },
-  oak: {
-    name: 'Oak',
-    image: oakImg,
-    duration: 50000,
-    xpPerAction: 40,
-    requiredLevel: 30,
-  },
-  pine: {
-    name: 'Pine',
-    image: pineImg,
-    duration: 55000,
-    xpPerAction: 45,
-    requiredLevel: 35,
-  },
-  pounceOak: {
-    name: 'Pounce Oak',
-    image: pounceOakImg,
-    duration: 60000,
-    xpPerAction: 50,
-    requiredLevel: 40,
   },
   spruce: {
     name: 'Spruce',
     image: spruceImg,
-    duration: 65000,
-    xpPerAction: 55,
-    requiredLevel: 45,
-  },
-  teak: {
-    name: 'Teak',
-    image: teakImg,
-    duration: 70000,
-    xpPerAction: 60,
-    requiredLevel: 50,
-  },
-  voidWhisker: {
-    name: 'Void Whisker',
-    image: voidWhiskerImg,
-    duration: 75000,
-    xpPerAction: 65,
-    requiredLevel: 55,
+    duration: 9000,
+    xpPerAction: 70,
+    requiredLevel: 30,
   },
   willow: {
     name: 'Willow',
     image: willowImg,
-    duration: 80000,
-    xpPerAction: 70,
+    duration: 10000,
+    xpPerAction: 95,
+    requiredLevel: 40,
+  },
+  ebony: {
+    name: 'Ebony',
+    image: ebonyImg,
+    duration: 10500,
+    xpPerAction: 130,
+    requiredLevel: 50,
+  },
+  mahogany: {
+    name: 'Mahogany',
+    image: mahoganyImg,
+    duration: 11000,
+    xpPerAction: 175,
     requiredLevel: 60,
+  },
+  teak: {
+    name: 'Teak',
+    image: teakImg,
+    duration: 12000,
+    xpPerAction: 302,
+    requiredLevel: 80,
+  },
+  pounceOak: {
+    name: 'Pounce Oak',
+    image: pounceOakImg,
+    duration: 13000,
+    xpPerAction: 1260,
+    requiredLevel: 150,
+  },
+  voidWhisker: {
+    name: 'Void Whisker',
+    image: voidWhiskerImg,
+    duration: 15000,
+    xpPerAction: 2660,
+    requiredLevel: 200,
   },
 } as const;
 
 /**
  * Mining resources configuration
  */
-export const ORE_TYPES = {
-  copper: {
+export const ORE_TYPES: GatherConfig = {
+  copperOre: {
     name: 'Copper Ore',
+    image: voidWhiskerImg,
     duration: 1500,
     xpPerAction: 8,
     requiredLevel: 1,
     offlineEfficiency: 0.5,
   },
-  tin: {
+  tinOre: {
     name: 'Tin Ore',
+    image: voidWhiskerImg,
     duration: 1500,
     xpPerAction: 8,
     requiredLevel: 1,
     offlineEfficiency: 0.5,
   },
-  iron: {
+  ironOre: {
     name: 'Iron Ore',
+    image: voidWhiskerImg,
     duration: 3000,
     xpPerAction: 20,
     requiredLevel: 15,
@@ -165,20 +177,23 @@ export const ORE_TYPES = {
   },
   coal: {
     name: 'Coal',
+    image: voidWhiskerImg,
     duration: 4000,
     xpPerAction: 30,
     requiredLevel: 30,
     offlineEfficiency: 0.5,
   },
-  gold: {
+  goldOre: {
     name: 'Gold Ore',
+    image: voidWhiskerImg,
     duration: 5000,
     xpPerAction: 50,
     requiredLevel: 40,
     offlineEfficiency: 0.5,
   },
-  mithril: {
+  mithrilOre: {
     name: 'Mithril Ore',
+    image: voidWhiskerImg,
     duration: 8000,
     xpPerAction: 80,
     requiredLevel: 55,

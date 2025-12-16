@@ -36,8 +36,6 @@ export function UserRegistration() {
 
             // Clear form
             setName('');
-
-            console.log('User created:', newUser);
             navigate('/game');
         } catch (error) {
             console.error('Error creating user:', error);

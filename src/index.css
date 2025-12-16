@@ -9,8 +9,18 @@
     font-display: block;
 }
 
+@font-face {
+    font-family: 'Mountains of Christmas';
+    src: url('/src/assets/fonts/CmasPlay.woff2') format('woff2');
+    font-weight: 400 700;
+    /* Supports all weights from 400 to 700 */
+    font-style: normal;
+    font-display: block;
+}
+
+
 @theme {
-    --font-sans: 'Pixelify Sans', system-ui, sans-serif;
+    --font-sans: 'Mountains of Christmas', system-ui, sans-serif;
 }
 
 @layer utilities {

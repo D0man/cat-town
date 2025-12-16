@@ -10,7 +10,7 @@ type SkillState = {
 };
 
 interface SkillVariable {
-    lastAction: null | string;
+    lastSkill: null | string;
     actionName: null | string;
     inventory: {}
 }
@@ -18,8 +18,9 @@ interface SkillActions {
     loadSkill: (userId: number, skillCode: SkillCode) => Promise<void>;
     updateExp: (userId: number, skillCode: SkillCode, expGain: number) => Promise<void>;
     loadAllSkills: (userId: number) => Promise<void>;
+    loadActionName: (userId: number) => Promise<void>;
     updateAction: (userId: number, skillName: string, actionName: string) => Promise<void>;
-    addItem: (userId: number, ItemId: string) => Promise<void>;
+    addItem: (userId: number, ItemName: string, quanity: number) => Promise<void>;
 }
 
 type SkillStore = SkillState & SkillActions & SkillVariable;
@@ -36,21 +37,21 @@ const createInitialState = (): SkillState => {
 
 export const useGameStore = create<SkillStore>((set, get) => ({
     ...createInitialState(),
-    lastAction: null,
+    lastSkill: null,
     actionName: null,
     inventory: {},
 
-    addItem: async (userId, itemName: string) => {
+    addItem: async (userId, itemName: string, quanity: number = 1) => {
         set((state) => {
             if (state.inventory.hasOwnProperty(itemName)) {
-                return { inventory: { ...state.inventory, [itemName]: 1 } }
+                return { inventory: { ...state.inventory, [itemName]: quanity } }
             } else {
 
                 return {
                     inventory: {
                         ...state.inventory,
                         // @ts-ignore
-                        [itemName]: state.inventory[itemName] + 1,
+                        [itemName]: state.inventory[itemName] + quanity,
                     },
                 };
             }
@@ -59,7 +60,7 @@ export const useGameStore = create<SkillStore>((set, get) => ({
         await db.inventory.put({
             userId,
             itemId: itemName,
-            quantity: (item?.quantity || 0) + 1,
+            quantity: (item?.quantity || 0) + quanity,
         });
     },
 
@@ -71,9 +72,7 @@ export const useGameStore = create<SkillStore>((set, get) => ({
             userId,
             skillName: skillName.toLowerCase()
         }).first();
-
         if (skill) {
-
             set({
                 [`${skillCode}Level`]: skill.level,
                 [`${skillCode}Exp`]: skill.exp,
@@ -84,7 +83,6 @@ export const useGameStore = create<SkillStore>((set, get) => ({
                 [`${skillCode}Level`]: 1,
                 [`${skillCode}Exp`]: 0,
             } as Partial<SkillState>);
-            set({ actionName: null })
         }
 
     },
@@ -94,6 +92,17 @@ export const useGameStore = create<SkillStore>((set, get) => ({
             get().loadSkill(userId, code)
         );
         await Promise.all(promises);
+    },
+
+    loadActionName: async (userId: number) => {
+        const userAction = await db.skills
+            .where('userId')
+            .equals(userId)
+            .and(skill => skill.active === true).toArray()
+        if (userAction.length) {
+            const skillAction = userAction[0].actionName
+            set({ actionName: skillAction })
+        }
     },
 
     updateExp: async (userId: number, skillCode: SkillCode, expGain: number) => {
@@ -115,21 +124,31 @@ export const useGameStore = create<SkillStore>((set, get) => ({
             [`${skillCode}Level`]: level,
         } as Partial<SkillState>);
 
-        await db.skills.put({
-            userId,
-            skillName: skillName.toLowerCase(),
-            level,
-            exp: newExp,
-        });
+        const updateDb = await db.skills.update(
+            [userId, skillName.toLowerCase()]
+            , {
+                level,
+                exp: newExp,
+            });
+        if (!updateDb) {
+            const existingSkill = await db.skills.get([userId, skillName.toLowerCase()]);
+
+            await db.skills.put({
+                ...(existingSkill ?? {}),
+                userId,
+                skillName: skillName.toLowerCase(),
+                level,
+                exp: newExp,
+            });
+        }
     },
     updateAction: async (userId: number, skillName, actionName) => {
         await db.skills
             .where('userId')
             .equals(userId)
             .and(skill => skill.active === true)
-            .modify({ active: false, startTime: null });
-        const timeNow = Date.now()
+            .modify({ active: false });
         set({ actionName: actionName })
-        await db.skills.update([userId, skillName.toLowerCase()], { active: true, actionName: actionName, startTime: timeNow });
+        await db.skills.update([userId, skillName.toLowerCase()], { active: true, actionName: actionName });
     },
 }));

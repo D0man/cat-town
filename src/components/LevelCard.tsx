@@ -1,6 +1,7 @@
 
 import type { SkillName } from "@/constants";
 import { getXpForNextLevel, getXpProgress } from "@/calculations";
+import { ProgressBar } from "./ProgressBar";
 interface LevelCardProps {
     skillName: SkillName
     levelNumber: number;
@@ -16,26 +17,15 @@ export const LevelCard: React.FC<LevelCardProps> = ({
 }) => {
     const progressPercentage = getXpProgress(currentProgress, levelNumber);
     const nextLevelExp = getXpForNextLevel(levelNumber)
-    const test = false ? progressPercentage + nextLevelExp : null
 
     return (
-        <div className="level-card">
+        <div className="mb-4">
             {imageUrl ? <img src={imageUrl} alt={`Level ${levelNumber}`} className="level-image" /> : skillName}
-            {test}
-            <div className="level-info">
+            <div>
                 <h3>Level {levelNumber}</h3>
-
-                <div className="mb-3">
-                    {/* <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-                        <div
-                            className="bg-blue-500 h-4 transition-all duration-100"
-                            style={{ width: `${progressPercentage * 100}%` }}
-                        />
-                    </div> */}
-                </div>
-
-                <p className="progress-text">
-                    {currentProgress} {/* {currentProgress} / {nextLevelExp} */}
+                <ProgressBar progress={progressPercentage * 100} activeColor="bg-blue-500" />
+                <p className="text-right text-xs text-blue-400">
+                    {currentProgress} / {nextLevelExp}
                 </p>
             </div>
         </div>

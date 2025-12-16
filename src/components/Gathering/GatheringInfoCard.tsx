@@ -57,6 +57,14 @@ export function GatheringInfoCard({
         return () => clearInterval(interval);
     }, [isGathering, startTime, duration]);
 
+    useEffect(() => {
+        if (isGathering) {
+            setIsGathering(false);
+            setStartTime(null);
+            setCurrentTime(Date.now());
+        }
+    }, [gatheringName]);
+
     return (
         <div className="p-4 rounded-lg border-2 border-gray-300 bg-white flex flex-col shadow-2xs">
             {/* Header: Icon + Skill Name */}
