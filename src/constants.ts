@@ -42,7 +42,7 @@ export const XP_TABLE = getTotalXpTable()
 
 export interface GatherType {
   name: string;
-  image: string;
+  image?: string;
   duration: number;
   xpPerAction: number;
   requiredLevel: number;
@@ -275,13 +275,29 @@ export const UNLOCKS = {
 } as const;
 
 
-export type SkillCode = 'wc' | 'ck' | 'fsh' | 'mn' | 'sm';
-export type SkillName = 'Woodcutting' | 'Cooking' | 'Fishing' | 'Mining' | 'Smithing';
+export type SkillCode = 'wc' | 'ck' | 'fsh' | 'mn';
+export type SkillName = 'woodcutting' | 'fishing' | 'mining';
 
 export const skillMap: Map<SkillCode, SkillName> = new Map([
-  ['wc', 'Woodcutting'],
-  ['ck', 'Cooking'],
-  ['fsh', 'Fishing'],
-  ['mn', 'Mining'],
-  ['sm', 'Smithing']
+  ['wc', 'woodcutting'],
+  ['fsh', 'fishing'],
+  ['mn', 'mining'],
 ]);
+
+export const skillReverseMap = new Map<SkillName, SkillCode>(
+  Array.from(skillMap, ([code, name]) => [name, code])
+);
+
+export const ALL_RESOURCES: GatherConfig = {
+  ...WOOD_TYPES,
+  ...ORE_TYPES,
+  ...FISH_TYPES,
+} as const;
+
+export type ResourceType = keyof typeof ALL_RESOURCES;
+
+export const SKILL_RESOURCES = {
+  woodcutting: WOOD_TYPES,
+  mining: ORE_TYPES,
+  fishing: FISH_TYPES,
+} as const;

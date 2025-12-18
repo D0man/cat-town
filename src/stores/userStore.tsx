@@ -11,6 +11,7 @@ interface UserStore {
     // Actions
     addUser: (name: string, gender: 'male' | 'female') => Promise<User>;
     updateLastOnline: (id: number) => Promise<void>;
+    updateLastOnlineLogin: (id: number) => Promise<void>;
     changeToZeroLastOnline: (id: number) => Promise<void>
     updateSavedGame: (id: number, savedGame: string) => Promise<void>;
     deleteUser: (id: number) => Promise<void>;
@@ -18,6 +19,7 @@ interface UserStore {
     logout: () => void;
     loadUsers: () => Promise<void>;
     loadLastOnline: (id: number) => Promise<void>
+
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
@@ -25,9 +27,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
     currentUser: null,
     isLoading: false,
     lastOnline: 0,
+    lastOnlineLogin: 0,
     setCurrentUser: (user: User | null) => {
         if (user && user.id) {
-            get().updateLastOnline(user.id);
+            get().updateLastOnlineLogin(user.id);
         }
         set({ currentUser: user });
     },
@@ -63,6 +66,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
                 gender,
                 createdAt: new Date(),
                 lastOnline: Date.now(),
+                lastOnlineLogin: Date.now(),
                 savedGame: '' // Empty saved game initially
             };
 
@@ -97,6 +101,24 @@ export const useUserStore = create<UserStore>((set, get) => ({
             throw error;
         }
     },
+    updateLastOnlineLogin: async (id: number) => {
+        try {
+            const timestamp = Date.now();
+            await db.users.update(id, { lastOnlineLogin: timestamp });
+
+            set(state => ({
+                users: state.users.map(user =>
+                    user.id === id ? { ...user, lastOnlineLogin: timestamp } : user
+                ),
+                currentUser: state.currentUser?.id === id
+                    ? { ...state.currentUser, lastOnlineLogin: timestamp }
+                    : state.currentUser
+            }));
+        } catch (error) {
+            console.error('Failed to update last online:', error);
+            throw error;
+        }
+    },
     loadLastOnline: async (id: number) => {
         const user = await db.users
             .where('id')
@@ -104,7 +126,9 @@ export const useUserStore = create<UserStore>((set, get) => ({
             .first();
 
         const lastOnline = user?.lastOnline;
-        set({ lastOnline: lastOnline })
+        if (lastOnline) {
+            set({ lastOnline: lastOnline })
+        }
 
     },
     changeToZeroLastOnline: async (id: number) => {

@@ -46,7 +46,7 @@ export function Woodcutting() {
     return (
         <>
             <div>Woodcuting Screen</div>
-            <LevelCard skillName="Woodcutting" levelNumber={wcLevel} currentProgress={wcExp || 0} />
+            <LevelCard skillName="woodcutting" levelNumber={wcLevel} currentProgress={wcExp || 0} />
             {/* {activeResources && (
                 <InfoCard
                     skill="Woodcutting"

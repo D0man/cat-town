@@ -1,60 +1,58 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGameStore } from "@stores/gameStore";
 import { useUserStore } from "@stores/userStore"
-import { GatherType, WOOD_TYPES } from "@/constants"
+import { GatherType, ALL_RESOURCES, skillReverseMap, SkillCode } from "@/constants"
 import { InfoCard } from "@components/Gathering/InfoCard";
 import { camelCaseString } from "@/helpers"
+import { calculateOfflineProgressMultiplayer } from "@/calculations";
 interface MainGameWrapperProps {
     children: React.ReactNode
 }
 export function MainGameWrapper({ children }: MainGameWrapperProps) {
-    const { loadAllSkills, updateExp, addItem, loadActionName } = useGameStore();
-    const { currentUser, updateLastOnline, lastOnline, changeToZeroLastOnline, loadLastOnline } = useUserStore();
+    const { loadAllSkills, updateExp, addItem, loadActionSkillName } = useGameStore();
+    const { currentUser, updateLastOnline, loadLastOnline } = useUserStore();
     const userId = currentUser?.id;
     const actionName = useGameStore(state => state.actionName);
+    const activeSkill = useGameStore(state => state.activeSkill)
+    const [wasOfflineProgressGiven, setWasOfflineProgressGiven] = useState(false)
     const activeResources = actionName
-        ? WOOD_TYPES[camelCaseString(actionName)]
+        ? ALL_RESOURCES[camelCaseString(actionName)]
         : null;
+
 
 
     useEffect(() => {
         if (userId) {
-            loadAllSkills(userId);
+            const processOfflineGains = async () => {
+                // Wait for lastOnline to actually load
+                await loadAllSkills(userId)
+                await loadLastOnline(userId);
+                await loadActionSkillName(userId)
+
+                const currentLastOnline = useUserStore.getState().lastOnline;
+
+                const currentActionName = useGameStore.getState().actionName;
+                console.log(currentActionName)
+                if (currentActionName !== null) {
+                    if (!wasOfflineProgressGiven) {
+                        const resource = ALL_RESOURCES[camelCaseString(currentActionName)]
+                        const multiplayer = calculateOfflineProgressMultiplayer(currentLastOnline, resource.duration)
+                        handleGather(userId, resource, multiplayer)
+                        setWasOfflineProgressGiven(true)
+                    }
+                }
+
+            }
+            processOfflineGains()
         }
     }, [userId]);
 
     useEffect(() => {
-
-        if (userId) {
-            loadLastOnline(userId)
-            if (lastOnline !== 0 && activeResources) {
-                const now = Date.now()
-                const TimeOffline = now - lastOnline
-                const actionCount = TimeOffline / activeResources.duration
-
-                console.log(activeResources.duration)
-                console.log(lastOnline, 'lastOnline')
-                console.log('now', now)
-                console.log(actionCount)
-                //TODO Apply logic that multiplies exp
-                if (actionCount >= 1) {
-                    const multipler = Math.floor(actionCount)
-                    updateExp(userId || 0, 'wc', activeResources.xpPerAction * multipler)
-                    addItem(userId, activeResources.name + 'item', 1 * multipler)
-                }
-            } else {
-
-                changeToZeroLastOnline(userId)
-
-            }
-        }
-    }, [userId, lastOnline]);
-
-    useEffect(() => {
         const handlePageHide = () => {
-            if (currentUser?.id && lastOnline !== 0) {
+            if (currentUser?.id) {
                 updateLastOnline(currentUser.id);
             }
+            console.log('quiting')
         };
 
         window.addEventListener("pagehide", handlePageHide);
@@ -64,14 +62,20 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
         };
     }, [currentUser?.id, updateLastOnline]);
 
-    useEffect(() => {
-        if (userId) {
-            loadActionName(userId);
+
+    const handleGather = async (user: number, resource: GatherType, quanity = 1) => {
+        await loadActionSkillName(user)
+        const activeSkill = useGameStore.getState().activeSkill;
+        if (activeSkill) {
+            const skillCode = skillReverseMap.get(activeSkill) as SkillCode
+
+            updateExp(user || 0, skillCode, quanity * resource.xpPerAction)
+            addItem(user, resource.name + 'item', quanity)
+            console.log(quanity)
+            if (quanity > 1) {
+                console.log('Byłeś offline i dostałeś expa:', quanity * resource.xpPerAction)
+            }
         }
-    }, [actionName, userId]);
-    const handleGather = (user: number, resource: GatherType) => {
-        updateExp(user || 0, 'wc', resource.xpPerAction)
-        addItem(user, resource.name + 'item', 1)
     }
 
     return (
@@ -79,7 +83,7 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
 
             {activeResources && (
                 <InfoCard
-                    skill="Woodcutting"
+                    skill={activeSkill || "woodcuting"}
                     actionName={activeResources.name}
                     duration={activeResources.duration}
                     onTimesEnd={() => handleGather(userId || 0, activeResources)}

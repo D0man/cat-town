@@ -7,6 +7,7 @@ export interface User {
   gender: 'male' | 'female';
   createdAt: Date;
   lastOnline: number;
+  lastOnlineLogin: number;
   savedGame: string;
 }
 
@@ -33,8 +34,8 @@ export class GameDatabase extends Dexie {
 
   constructor() {
     super('GameDB');
-    this.version(6).stores({
-      users: '++id, name, lastOnline',
+    this.version(7).stores({
+      users: '++id, name, lastOnline, lasOnlineLogin',
       skills: '[userId+skillName], userId',
       inventory: '[userId+itemId], userId',
     });
