@@ -1,6 +1,7 @@
 //UserRegistration.tsx
 import { useState, FormEvent } from 'react';
 import { useUserStore } from '../../../stores/userStore';
+import { useGameStore } from '@/stores/gameStore';
 import { GenderSelector } from './GenderSelector';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +10,7 @@ export function UserRegistration() {
     const [name, setName] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { addUser, setCurrentUser } = useUserStore();
+
     const [gender, setGender] = useState<'male' | 'female'>('male');
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -33,7 +35,7 @@ export function UserRegistration() {
 
             // Auto-login the new user
             setCurrentUser(newUser);
-
+            useGameStore.setState({ actionName: null });
             // Clear form
             setName('');
             navigate('/game');

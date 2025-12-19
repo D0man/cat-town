@@ -44,12 +44,20 @@ export function getXpProgress(currentXp: number, currentLevel: number): number {
 }
 
 
+export function offlineLimiter(hours: number): number {
+  return hours * 60 * 60 * 1000
+}
+const HOURSLIMIT = 12
+
 export function calculateOfflineProgressMultiplayer(
   actionStartTime: number,
   actionDuration: number,
 ): number {
   const currentTime = Date.now()
-  console.log(actionStartTime, 'actionStart')
-  const timeDifference = currentTime - actionStartTime
+  let timeDifference = currentTime - actionStartTime
+  const maxDifference = offlineLimiter(HOURSLIMIT)
+  if (timeDifference > maxDifference) {
+    timeDifference = maxDifference
+  }
   return Math.floor(timeDifference / actionDuration)
 }

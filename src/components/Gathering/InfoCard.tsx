@@ -3,7 +3,7 @@ import { useInterval } from "@hooks/useInterval";
 import { ProgressBar } from "@components/ProgressBar"
 import { formatTime } from "@/helpers";
 interface InfoCardProps {
-    skill: string;    // e.g., "Woodcutting"
+    skill: string | null;    // e.g., "Woodcutting"
     actionName: string | null;     // e.g., "Oak"
     duration: number;          // Duration in milliseconds
     onTimesEnd: () => void;      // Callback when action ends

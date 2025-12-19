@@ -32,7 +32,6 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
                 const currentLastOnline = useUserStore.getState().lastOnline;
 
                 const currentActionName = useGameStore.getState().actionName;
-                console.log(currentActionName)
                 if (currentActionName !== null) {
                     if (!wasOfflineProgressGiven) {
                         const resource = ALL_RESOURCES[camelCaseString(currentActionName)]
@@ -47,22 +46,6 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
         }
     }, [userId]);
 
-    useEffect(() => {
-        const handlePageHide = () => {
-            if (currentUser?.id) {
-                updateLastOnline(currentUser.id);
-            }
-            console.log('quiting')
-        };
-
-        window.addEventListener("pagehide", handlePageHide);
-
-        return () => {
-            window.removeEventListener("pagehide", handlePageHide);
-        };
-    }, [currentUser?.id, updateLastOnline]);
-
-
     const handleGather = async (user: number, resource: GatherType, quanity = 1) => {
         await loadActionSkillName(user)
         const activeSkill = useGameStore.getState().activeSkill;
@@ -71,9 +54,9 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
 
             updateExp(user || 0, skillCode, quanity * resource.xpPerAction)
             addItem(user, resource.name + 'item', quanity)
-            console.log(quanity)
             if (quanity > 1) {
                 console.log('Byłeś offline i dostałeś expa:', quanity * resource.xpPerAction)
+                updateLastOnline(user);
             }
         }
     }
@@ -83,7 +66,7 @@ export function MainGameWrapper({ children }: MainGameWrapperProps) {
 
             {activeResources && (
                 <InfoCard
-                    skill={activeSkill || "woodcuting"}
+                    skill={activeSkill}
                     actionName={activeResources.name}
                     duration={activeResources.duration}
                     onTimesEnd={() => handleGather(userId || 0, activeResources)}

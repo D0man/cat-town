@@ -150,54 +150,106 @@ export const WOOD_TYPES: GatherConfig = {
 /**
  * Mining resources configuration
  */
-export const ORE_TYPES: GatherConfig = {
+export const ORE_TYPES = {
   copperOre: {
     name: 'Copper Ore',
-    image: voidWhiskerImg,
-    duration: 1500,
-    xpPerAction: 8,
+    duration: 3000,
+    xpPerAction: 10,
     requiredLevel: 1,
-    offlineEfficiency: 0.5,
   },
+
   tinOre: {
     name: 'Tin Ore',
-    image: voidWhiskerImg,
-    duration: 1500,
-    xpPerAction: 8,
-    requiredLevel: 1,
-    offlineEfficiency: 0.5,
+    duration: 6000,
+    xpPerAction: 15,
+    requiredLevel: 5,
   },
+
   ironOre: {
     name: 'Iron Ore',
-    image: voidWhiskerImg,
-    duration: 3000,
-    xpPerAction: 20,
+    duration: 7000,
+    xpPerAction: 22,
+    requiredLevel: 10,
+  },
+
+  leadOre: {
+    name: 'Lead Ore',
+    duration: 7500,
+    xpPerAction: 31,
     requiredLevel: 15,
-    offlineEfficiency: 0.5,
   },
-  coal: {
-    name: 'Coal',
-    image: voidWhiskerImg,
-    duration: 4000,
-    xpPerAction: 30,
-    requiredLevel: 30,
-    offlineEfficiency: 0.5,
+
+  silverOre: {
+    name: 'Silver Ore',
+    duration: 8000,
+    xpPerAction: 42,
+    requiredLevel: 20,
   },
+
   goldOre: {
     name: 'Gold Ore',
-    image: voidWhiskerImg,
-    duration: 5000,
-    xpPerAction: 50,
-    requiredLevel: 40,
-    offlineEfficiency: 0.5,
+    duration: 8500,
+    xpPerAction: 55,
+    requiredLevel: 25,
+    isMilestone: true,
   },
+
+  platinumOre: {
+    name: 'Platinum Ore',
+    duration: 9000,
+    xpPerAction: 70,
+    requiredLevel: 30,
+  },
+
+  obsidianOre: {
+    name: 'Obsidian Ore',
+    duration: 10000,
+    xpPerAction: 95,
+    requiredLevel: 40,
+  },
+
   mithrilOre: {
     name: 'Mithril Ore',
-    image: voidWhiskerImg,
-    duration: 8000,
-    xpPerAction: 80,
-    requiredLevel: 55,
-    offlineEfficiency: 0.5,
+    duration: 10500,
+    xpPerAction: 130,
+    requiredLevel: 50,
+    isMilestone: true,
+  },
+
+  orichalcumOre: {
+    name: 'Orichalcum Ore',
+    duration: 11000,
+    xpPerAction: 175,
+    requiredLevel: 60,
+  },
+
+  adamantiteOre: {
+    name: 'Adamantite Ore',
+    duration: 11500,
+    xpPerAction: 232,
+    requiredLevel: 70,
+  },
+
+  runestoneOre: {
+    name: 'Runestone Ore',
+    duration: 12000,
+    xpPerAction: 302,
+    requiredLevel: 80,
+
+  },
+
+  mythrilOre: {
+    name: 'Mythril Ore',
+    duration: 15000,
+    xpPerAction: 1260,
+    requiredLevel: 150,
+  },
+
+  etherealCrystal: {
+    name: 'Ethereal Crystal',
+    duration: 19000,
+    xpPerAction: 2660,
+    requiredLevel: 200,
   },
 } as const;
 
@@ -207,47 +259,102 @@ export type OreType = keyof typeof ORE_TYPES;
  * Fishing resources configuration
  */
 export const FISH_TYPES = {
-  shrimp: {
-    name: 'Shrimp',
-    duration: 2000,
+  goldfish: {
+    name: 'Goldfish',
+    duration: 3000,
     xpPerAction: 10,
     requiredLevel: 1,
-    offlineEfficiency: 0.5,
   },
-  sardine: {
-    name: 'Sardine',
-    duration: 2500,
+
+  trout: {
+    name: 'Trout',
+    duration: 6000,
     xpPerAction: 15,
     requiredLevel: 5,
-    offlineEfficiency: 0.5,
   },
+
+  bass: {
+    name: 'Bass',
+    duration: 7000,
+    xpPerAction: 22,
+    requiredLevel: 10,
+  },
+
+  pike: {
+    name: 'Pike',
+    duration: 7500,
+    xpPerAction: 31,
+    requiredLevel: 15,
+  },
+
   salmon: {
     name: 'Salmon',
-    duration: 4000,
-    xpPerAction: 40,
-    requiredLevel: 30,
-    offlineEfficiency: 0.5,
+    duration: 8000,
+    xpPerAction: 42,
+    requiredLevel: 20,
   },
+
+  catfish: {
+    name: 'Catfish',
+    duration: 8500,
+    xpPerAction: 55,
+    requiredLevel: 25,
+  },
+
+  carp: {
+    name: 'Carp',
+    duration: 9000,
+    xpPerAction: 70,
+    requiredLevel: 30,
+  },
+
   tuna: {
     name: 'Tuna',
-    duration: 5000,
-    xpPerAction: 55,
-    requiredLevel: 35,
-    offlineEfficiency: 0.5,
-  },
-  lobster: {
-    name: 'Lobster',
-    duration: 7000,
-    xpPerAction: 75,
+    duration: 10000,
+    xpPerAction: 95,
     requiredLevel: 40,
-    offlineEfficiency: 0.5,
   },
+
+  marlin: {
+    name: 'Marlin',
+    duration: 10500,
+    xpPerAction: 130,
+    requiredLevel: 50,
+  },
+
+  flounder: {
+    name: 'Flounder',
+    duration: 11000,
+    xpPerAction: 175,
+    requiredLevel: 60,
+  },
+
+  snapper: {
+    name: 'Snapper',
+    duration: 11500,
+    xpPerAction: 232,
+    requiredLevel: 70,
+  },
+
   shark: {
     name: 'Shark',
-    duration: 9000,
-    xpPerAction: 110,
-    requiredLevel: 76,
-    offlineEfficiency: 0.5,
+    duration: 12000,
+    xpPerAction: 302,
+    requiredLevel: 80,
+  },
+
+  mythicKoi: {
+    name: 'Mythic Koi',
+    duration: 15000,
+    xpPerAction: 1260,
+    requiredLevel: 150,
+  },
+
+  dimensionalLeviathan: {
+    name: 'Dimensional Leviathan',
+    duration: 18000,
+    xpPerAction: 2660,
+    requiredLevel: 200,
   },
 } as const;
 
@@ -301,3 +408,4 @@ export const SKILL_RESOURCES = {
   mining: ORE_TYPES,
   fishing: FISH_TYPES,
 } as const;
+
