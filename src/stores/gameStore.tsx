@@ -127,7 +127,9 @@ export const useGameStore = create<SkillStore>((set, get) => ({
                 [`${skillCode}Level`]: skill.level,
                 [`${skillCode}Exp`]: skill.exp,
             } as Partial<SkillState>);
-            set({ actionName: skill?.actionName })
+            if (skill.active) {
+                set({ actionName: skill.actionName, activeSkill: skillName as SkillName })
+            }
         } else {
             set({
                 [`${skillCode}Level`]: 1,
