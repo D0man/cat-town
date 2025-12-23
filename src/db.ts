@@ -21,10 +21,11 @@ export interface Skill {
 }
 
 export interface InventoryItem {
-  id?: number;
   userId: number;
   itemId: string;
-  quantity: number;
+  amount: number;
+  containerId: number;
+  position: number;
 }
 
 export class GameDatabase extends Dexie {
@@ -37,7 +38,7 @@ export class GameDatabase extends Dexie {
     this.version(7).stores({
       users: '++id, name, lastOnline, lasOnlineLogin',
       skills: '[userId+skillName], userId',
-      inventory: '[userId+itemId], userId',
+      inventory: '[userId+itemId], userId, amount,containerId',
     });
   }
 }

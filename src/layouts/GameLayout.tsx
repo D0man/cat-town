@@ -1,6 +1,7 @@
 //GameLayouts.tsx
 import { Outlet, useNavigate } from 'react-router-dom';
 import { MainGameWrapper } from '@components/MainGameWrapper';
+import { Inventory } from '@components/Inventory/Inventory';
 export function GameLayout() {
     const navigate = useNavigate();
 
@@ -22,6 +23,7 @@ export function GameLayout() {
             <main className="flex-1 overflow-auto p-4">
                 <MainGameWrapper>
                     <Outlet />
+                    <Inventory />
                 </MainGameWrapper>
             </main>
         </div>

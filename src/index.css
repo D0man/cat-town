@@ -397,4 +397,13 @@
     .pixeled-gray-900 {
         --pixeled-bg-color: #111827;
     }
+
+    .outline-shadow-gray-50 {
+        --outline-color: theme(colors.gray.50);
+        text-shadow:
+            -1px -1px 0 var(--outline-color),
+            1px -1px 0 var(--outline-color),
+            -1px 1px 0 var(--outline-color),
+            1px 1px 0 var(--outline-color);
+    }
 }

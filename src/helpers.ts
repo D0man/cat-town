@@ -1,4 +1,5 @@
 import { UNLOCKS, GatherConfig } from "./constants"
+import { SkillName, SKILL_RESOURCES } from "./constants";
 export function isFeatureUnlocked(featureName: keyof typeof UNLOCKS, currentLevel: number): boolean {
     return currentLevel >= UNLOCKS[featureName].requiredLevel;
 }
@@ -28,4 +29,8 @@ export function formatTime(ms: number) {
     const tenthsSeconds = Math.floor((ms % 1000) / 100);
     return `${seconds}.${tenthsSeconds} sec`;
 
+}
+
+export function getResourcesForSkill(skillName: SkillName): GatherConfig {
+    return SKILL_RESOURCES[skillName];
 }

@@ -35,7 +35,7 @@ export function UserRegistration() {
 
             // Auto-login the new user
             setCurrentUser(newUser);
-            useGameStore.setState({ actionName: null });
+            useGameStore.setState({ actionName: null, inventory: {} });
             // Clear form
             setName('');
             navigate('/game');

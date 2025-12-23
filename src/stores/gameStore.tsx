@@ -8,11 +8,20 @@ type SkillState = {
 } & {
     [K in SkillCode as `${K}Exp`]: number;
 };
+//TodO make item only one source
+interface InventoryItem {
+    itemId: string;
+    amount: number;
+    containerId: number;
+    position: number;
+}
+type Inventory = Record<string, InventoryItem>
+
 
 interface SkillVariable {
     activeSkill: null | SkillName;
     actionName: null | string;
-    inventory: {}
+    inventory: Inventory
 }
 interface SkillActions {
     loadSkill: (userId: number, skillCode: SkillCode) => Promise<void>;
@@ -21,6 +30,7 @@ interface SkillActions {
     loadActionSkillName: (userId: number) => Promise<void>;
     updateAction: (userId: number, skillName: string, actionName: string) => Promise<void>;
     addItem: (userId: number, ItemName: string, quanity: number) => Promise<void>;
+    loadInventory: (userId: number) => Promise<void>;
 }
 
 type SkillStore = SkillState & SkillActions & SkillVariable;
@@ -41,27 +51,67 @@ export const useGameStore = create<SkillStore>((set, get) => ({
     actionName: null,
     inventory: {},
 
-    addItem: async (userId, itemName: string, quanity: number = 1) => {
+    addItem: async (userId, itemName: string, quantity: number = 1, containerId: number = 1) => {
         set((state) => {
             if (state.inventory.hasOwnProperty(itemName)) {
-                return { inventory: { ...state.inventory, [itemName]: quanity } }
-            } else {
-
                 return {
                     inventory: {
                         ...state.inventory,
-                        // @ts-ignore
-                        [itemName]: state.inventory[itemName] + quanity,
+                        [itemName]: {
+                            ...state.inventory[itemName],
+                            amount: state.inventory[itemName].amount + quantity
+                        }
+                    }
+                };
+            } else {
+                const maxPosition = Object.values(state.inventory).reduce(
+                    (max, item) => item.containerId === 1 && item.position > max ? item.position : max, 0);
+                return {
+                    inventory: {
+                        ...state.inventory,
+                        [itemName]: {
+                            itemId: itemName,
+                            amount: quantity,
+                            containerId: 1,
+                            position: maxPosition + 1,
+                        }
                     },
                 };
             }
         })
-        const item = await db.inventory.get(itemName);
+        const item = await db.inventory.get([userId, itemName]);
         await db.inventory.put({
             userId,
             itemId: itemName,
-            quantity: (item?.quantity || 0) + quanity,
+            amount: (item?.amount || 0) + quantity,
+            containerId: containerId,
+            position: item?.position || get().inventory[itemName]?.position || 1
         });
+    },
+    loadInventory: async (userId: number) => {
+        try {
+            const loadedInventory = await db.inventory
+                .where('userId')
+                .equals(userId).toArray()
+            console.log(loadedInventory, 'loadedInventory!')
+            const inventoryObject = loadedInventory.reduce((acc, item) => {
+                acc[item.itemId] = {
+                    itemId: item.itemId,
+                    amount: item.amount,
+                    containerId: item.containerId,
+                    position: item.position
+                };
+                return acc;
+            }, {} as Record<string, InventoryItem>);
+
+            // Update Zustand store
+            set({ inventory: inventoryObject });
+        }
+        catch (error) {
+            console.error('Failed to load inventory:', error);
+            throw error;
+        }
+
     },
 
     loadSkill: async (userId: number, skillCode: SkillCode) => {

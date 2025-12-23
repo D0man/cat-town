@@ -13,6 +13,7 @@ import spruceImg from '@assets/skills/trees/spruce.png';
 import teakImg from '@assets/skills/trees/teak.png';
 import voidWhiskerImg from '@assets/skills/trees/voidWhisker.png';
 import willowImg from '@assets/skills/trees/willow.png';
+import Pinelog from '@assets/items/PineLog_32x32.png';
 
 export function xpForLevel(level: number): number {
   if (level <= 30) {
@@ -409,3 +410,21 @@ export const SKILL_RESOURCES = {
   fishing: FISH_TYPES,
 } as const;
 
+interface Item {
+  imgsrc: string;
+  description: string;
+  amount?: number;
+  containerId?: number;
+  price: number;
+  id: string;
+};
+
+
+export const ITEMS: Record<string, Item> = {
+  PineItem: {
+    imgsrc: Pinelog,
+    id: "PineItem",
+    description: 'pine log',
+    price: 1
+  }
+}

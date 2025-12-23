@@ -1,6 +1,8 @@
 //GameMain.tsx
+
 export function GameMain() {
     return (
-        <div>MainScreen</div>
+        <div>MainScreen
+        </div>
     )
 }

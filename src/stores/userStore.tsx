@@ -50,7 +50,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
             }
             set({ users, isLoading: false });
         } catch (error) {
-            console.log(error)
+            console.error(error)
             console.error('Failed to load users:', error);
             set({ isLoading: false });
         }

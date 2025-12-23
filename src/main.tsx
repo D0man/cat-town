@@ -8,3 +8,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <App />
   </React.StrictMode>,
 );
+
+localStorage.openpages = Date.now();
+var onLocalStorageEvent = function (e: StorageEvent) {
+  if (e.key == "openpages") {
+    localStorage.page_available = Date.now();
+  }
+  if (e.key == "page_available") {
+    alert("One more page already open");
+  }
+};
+window.addEventListener('storage', onLocalStorageEvent, false);
