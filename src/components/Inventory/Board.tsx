@@ -22,12 +22,15 @@ import {
 import { DroppableContainer } from './DropableContainer';
 import { UniqueIdentifier, ContainersMap, ContainerTitleMap, ItembyDb } from './types';
 import { useGameStore } from '@/stores/gameStore';
+import { useUserStore } from '@/stores/userStore';
 type ItemsByContainer = Record<number, ItembyDb[]>;
 
 const FIRST_CONTAINER_ID = "1";
 
 export function Board() {
-    const { inventory } = useGameStore()
+    const { inventory, updateInventoryPosition } = useGameStore()
+    const { currentUser } = useUserStore();
+    const userId = currentUser?.id;
     const currentInventory = useGameStore.getState().inventory;
     const [containers, setContainers] = useState<ContainersMap>({
         "1": [
@@ -36,7 +39,6 @@ export function Board() {
     });
     useEffect(() => {
         if (Object.keys(currentInventory).length) {
-            console.log(currentInventory)
             const itemsByContainer = Object.values(currentInventory).reduce<ItemsByContainer>(
                 (itemsByContainer, { containerId, itemId, amount, position }) => {
                     (itemsByContainer[containerId] ??= []).push({ itemId, amount, position });
@@ -152,15 +154,32 @@ export function Board() {
         const activeContainer = findContainer(id);
         const overContainer = overId ? findContainer(overId) : null;
 
-        if (
-            !activeContainer ||
-            !overContainer ||
-            activeContainer !== overContainer
-        ) {
+        if (!activeContainer || !overContainer) {
             setActiveId(null);
             return;
         }
 
+        // Handle items moved between containers
+        if (activeContainer !== overContainer) {
+            const updatedInventory = { ...inventory };
+            if (updatedInventory[id as string]) {
+                updatedInventory[id as string] = {
+                    ...updatedInventory[id as string],
+                    containerId: parseInt(overContainer as string),
+                    position: containers[overContainer].length + 1,
+                };
+            }
+
+            if (userId) {
+                updateInventoryPosition(userId, updatedInventory).catch(err =>
+                    console.error('Failed to update inventory position:', err)
+                );
+            }
+            setActiveId(null);
+            return;
+        }
+
+        // Handle items reordered within same container
         const activeIndex = containers[activeContainer].findIndex((item) => item.itemId === id);
         const overIndex = containers[overContainer].findIndex((item) => item.itemId === overId);
 
@@ -170,6 +189,24 @@ export function Board() {
                 ...items,
                 [overContainer]: newState,
             }));
+
+            // Sync inventory to DB with updated positions
+            const updatedInventory = { ...inventory };
+            newState.forEach((item, index) => {
+                if (updatedInventory[item.itemId]) {
+                    updatedInventory[item.itemId] = {
+                        ...updatedInventory[item.itemId],
+                        position: index + 1,
+                    };
+                }
+            });
+
+            // Sync to database if user is logged in
+            if (userId) {
+                updateInventoryPosition(userId, updatedInventory).catch(err =>
+                    console.error('Failed to update inventory position:', err)
+                );
+            }
         }
         setActiveId(null);
     };
@@ -237,7 +274,7 @@ export function Board() {
                                 title={containerTitles[containerId]}
                                 items={containers[containerId]}
                                 filter={filterWord}
-                                isFirst={containerId === FIRST_CONTAINER_ID}
+                                isFirst={containerId == FIRST_CONTAINER_ID}
                                 addContainer={() => addContainer()}
                                 onRemoveContainer={removeContainer}
                             />

@@ -31,6 +31,7 @@ interface SkillActions {
     updateAction: (userId: number, skillName: string, actionName: string) => Promise<void>;
     addItem: (userId: number, ItemName: string, quanity: number) => Promise<void>;
     loadInventory: (userId: number) => Promise<void>;
+    updateInventoryPosition: (userId: number, inventory: Inventory) => Promise<void>;
 }
 
 type SkillStore = SkillState & SkillActions & SkillVariable;
@@ -203,5 +204,20 @@ export const useGameStore = create<SkillStore>((set, get) => ({
             .modify({ active: false });
         set({ actionName: actionName, activeSkill: skillName as SkillName })
         await db.skills.update([userId, skillName.toLowerCase()], { active: true, actionName: actionName });
+    },
+    updateInventoryPosition: async (userId: number, inventory: Inventory) => {
+        set({ inventory });
+
+        // Sync all items to database with new positions
+        const promises = Object.values(inventory).map(item =>
+            db.inventory.put({
+                userId,
+                itemId: item.itemId,
+                amount: item.amount,
+                containerId: item.containerId,
+                position: item.position
+            })
+        );
+        await Promise.all(promises);
     },
 }));
